@@ -1,3 +1,4 @@
+// filepath: /d:/MafiaAndroidStudio/Mafia/server.js
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
@@ -6,9 +7,18 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
-const PORT = process.env.PORT || 8080; // Zmieniono port na 8080
+const PORT = process.env.PORT || 8080; // Changed port to 8080
 
 app.use(express.static(__dirname + '/public'));
+
+// Add a route for the root path
+app.get('/', (req, res) => {
+  res.send('Server is running!');
+});
+
+app.get('/test', (req, res) => {
+  res.send('Server is running!');
+});
 
 io.on('connection', (socket) => {
   console.log('New client connected');
@@ -17,12 +27,12 @@ io.on('connection', (socket) => {
     socket.join(gameCode);
     console.log(`Client joined game: ${gameCode}`);
 
-    // Powiadom innych graczy w grze o nowym graczu
+    // Notify other players in the game about the new player
     socket.to(gameCode).emit('playerJoined');
   });
 
   socket.on('sendMessage', (data) => {
-    // Wyślij wiadomość do wszystkich graczy w grze
+    // Send message to all players in the game
     socket.to(data.gameCode).emit('message', data);
   });
 
@@ -32,4 +42,3 @@ io.on('connection', (socket) => {
 });
 
 server.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
-//
