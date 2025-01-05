@@ -1,3 +1,4 @@
+// filepath: /D:/MafiaAndroidStudio/Mafia/server.js
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
@@ -38,9 +39,15 @@ io.on('connection', (socket) => {
   });
 
   socket.on('sendMessage', (data) => {
+    // Log the received message
+    console.log(`Message from ${data.username}: ${data.message}`);
+
     // Send message to all players in the game
     socket.to(data.gameCode).emit('message', data);
   });
+
+  // Emit a message to the client
+  socket.emit('serverMessage', { message: 'Welcome to the game!' });
 
   socket.on('disconnect', () => {
     console.log('Client disconnected');
