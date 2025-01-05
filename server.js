@@ -7,8 +7,9 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, {
   cors: {
-    origin: "*", // Allow all origins for testing
-    methods: ["GET", "POST"]
+    origin: "*", // Your frontend URL
+    methods: ["GET", "POST"],
+    credentials: true // Allow cookies if needed
   },
   transports: ["polling"] // Force polling transport
 });
@@ -16,6 +17,7 @@ const io = socketIO(server, {
 const PORT = process.env.PORT || 8080;
 
 app.use(cors());
+
 app.use(express.static(__dirname + '/public'));
 
 io.on('connection', (socket) => {
@@ -24,20 +26,14 @@ io.on('connection', (socket) => {
   socket.on('joinGame', (gameCode) => {
     socket.join(gameCode);
     console.log(`Client joined game: ${gameCode}`);
-
-    // Notify other players in the game about the new player
     socket.to(gameCode).emit('playerJoined', { gameCode });
   });
 
   socket.on('sendMessage', (data) => {
-    // Log the received message
     console.log(`Message from ${data.username}: ${data.message}`);
-
-    // Send message to all players in the game
     socket.to(data.gameCode).emit('message', data);
   });
 
-  // Emit a message to the client
   socket.emit('serverMessage', { message: 'Welcome to the game!' });
 
   socket.on('disconnect', () => {
