@@ -7,6 +7,7 @@
 </head>
 <body>
   <h1>Socket.IO Test</h1>
+  <button id="checkConnection">Check Connection</button>
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
   <script>
     // Connect to the Socket.IO server
@@ -15,13 +16,6 @@
     // Listen for the 'connect' event
     socket.on('connect', () => {
       console.log('Connected to server');
-
-      // Send a message to the server
-      socket.emit('sendMessage', {
-        username: 'TestUser',
-        message: 'Hello from the browser console!',
-        gameCode: 'game123'
-      });
     });
 
     // Listen for messages from the server
@@ -36,6 +30,16 @@
     // Listen for the 'disconnect' event
     socket.on('disconnect', () => {
       console.log('Disconnected from server');
+    });
+
+    // Add event listener to the button
+    document.getElementById('checkConnection').addEventListener('click', () => {
+      console.log('Button clicked, sending message to server');
+      socket.emit('sendMessage', {
+        username: 'TestUser',
+        message: 'Hello from the browser console!',
+        gameCode: 'game123'
+      });
     });
   </script>
 </body>
