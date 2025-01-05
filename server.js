@@ -2,19 +2,21 @@
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
+const cors = require('cors');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIO(server);
-
-const PORT = process.env.PORT || 8080; // Changed port to 8080
-
-app.use(express.static(__dirname + '/public'));
-
-// Add a route for the root path
-app.get('/', (req, res) => {
-  res.send('Server is running!');
+const io = socketIO(server, {
+  cors: {
+    origin: "*", // Allow all origins for testing purposes
+    methods: ["GET", "POST"]
+  }
 });
+
+const PORT = process.env.PORT || 8080;
+
+app.use(cors());
+app.use(express.static(__dirname + '/public'));
 
 app.get('/test', (req, res) => {
   res.send('Server is running!');
