@@ -17,10 +17,6 @@ const PORT = process.env.PORT || 8080;
 app.use(cors());
 app.use(express.static(__dirname + '/public'));
 
-app.get('/test', (req, res) => {
-  res.send('Server is running!');
-});
-
 io.on('connection', (socket) => {
   console.log('New client connected');
 
