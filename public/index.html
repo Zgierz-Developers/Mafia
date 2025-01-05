@@ -52,11 +52,10 @@
     // Send message
     document.getElementById('sendMessage').addEventListener('click', () => {
       const message = document.getElementById('message').value;
-      socket.emit('sendMessage', {
-        username: 'TestUser',
-        message: message,
-        gameCode: document.getElementById('gameCode').value
-      });
+      const gameCode = document.getElementById('gameCode').value;
+      const data = { username: 'User', message, gameCode };
+      console.log(`Sending message: ${message}`);
+      socket.emit('sendMessage', data);
     });
   </script>
 </body>

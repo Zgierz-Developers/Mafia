@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
@@ -20,6 +21,9 @@ const PORT = process.env.PORT || 8080;
 
 // Middleware
 app.use(cors());  // Enable CORS for cross-origin requests
+
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Socket.IO Connection Event
 io.on('connection', (socket) => {
@@ -49,5 +53,4 @@ io.on('connection', (socket) => {
   });
 });
 
-// Start the server
-server.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
