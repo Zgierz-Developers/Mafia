@@ -1,57 +1,46 @@
 package com.example.mafia;
 
-import android.content.Intent;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
 
-    public Button hostGame;
-    public Button joinGame;
+    private EditText gameCodeEditText;
+    private Button joinButton, disconnectButton;
+    private GameClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        hostGame = findViewById(R.id.hostGame);
-        joinGame = findViewById(R.id.joinGame);
-        Intent lobby = new Intent(MainActivity.this, Lobby.class);
-        Intent host = new Intent(MainActivity.this, Host.class);
+        gameCodeEditText = findViewById(R.id.gameCodeEditText);
+        joinButton = findViewById(R.id.joinButton);
+        disconnectButton = findViewById(R.id.disconnectButton);
+        disconnectButton.setEnabled(false);
 
-        hostGame.setOnClickListener(new View.OnClickListener() {
+        joinButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(host);
+            public void onClick(View v) {
+                String gameCode = gameCodeEditText.getText().toString();
+                client = new GameClient(gameCode);
+                client.connect();
+                joinButton.setEnabled(false);
+                disconnectButton.setEnabled(true);
             }
         });
 
-        joinGame.setOnClickListener(new View.OnClickListener() {
+        disconnectButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-
-                startActivity(lobby);
-
+            public void onClick(View v) {
+                client.disconnect();
+                joinButton.setEnabled(true);
+                disconnectButton.setEnabled(false);
             }
-        });
-
-
-
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
         });
     }
 }
