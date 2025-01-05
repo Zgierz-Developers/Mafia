@@ -7,9 +7,10 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, {
   cors: {
-    origin: "*", // Allow all origins for testing purposes
+    origin: "*", // Allow all origins for testing
     methods: ["GET", "POST"]
-  }
+  },
+  transports: ["polling"] // Force polling transport
 });
 
 const PORT = process.env.PORT || 8080;
@@ -25,7 +26,7 @@ io.on('connection', (socket) => {
     console.log(`Client joined game: ${gameCode}`);
 
     // Notify other players in the game about the new player
-    socket.to(gameCode).emit('playerJoined');
+    socket.to(gameCode).emit('playerJoined', { gameCode });
   });
 
   socket.on('sendMessage', (data) => {
