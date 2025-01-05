@@ -1,4 +1,3 @@
-// filepath: /d:/MafiaAndroidStudio/Mafia/server.js
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
@@ -17,6 +16,11 @@ const PORT = process.env.PORT || 8080;
 
 app.use(cors());
 app.use(express.static(__dirname + '/public'));
+
+// Add a route for the root path
+app.get('/', (req, res) => {
+  res.send('Server is running!');
+});
 
 app.get('/test', (req, res) => {
   res.send('Server is running!');
