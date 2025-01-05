@@ -17,11 +17,6 @@ const PORT = process.env.PORT || 8080;
 app.use(cors());
 app.use(express.static(__dirname + '/public'));
 
-// Add a route for the root path
-app.get('/', (req, res) => {
-  res.send('Server is running!');
-});
-
 app.get('/test', (req, res) => {
   res.send('Server is running!');
 });
