@@ -65,6 +65,7 @@ io.on('connection', (socket) => {
   socket.on('sendMessage', (data) => {
     console.log(`Message from ${data.username}: ${data.message}`);
     socket.to(data.gameCode).emit('message', data);
+    console.log(`Message sent to room ${data.gameCode}`);
   });
 
   // Send a welcome message to the client
