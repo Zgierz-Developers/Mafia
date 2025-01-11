@@ -38,6 +38,7 @@ io.on('connection', (socket) => {
     } else {
       rooms[roomName] = { owner: ownerName, players: [ownerName], hostSocketId: socket.id };
       socket.join(roomName);
+      socket.username = ownerName; // Store the owner's username in the socket object
       console.log(`Room created: ${roomName} by ${ownerName}`);
       io.emit('roomList', rooms); // Update all clients with the new room list
       io.to(roomName).emit('message', { username: 'System', message: `${ownerName} created the room.` });
@@ -49,6 +50,7 @@ io.on('connection', (socket) => {
     if (rooms[roomName]) {
       rooms[roomName].players.push(playerName);
       socket.join(roomName);
+      socket.username = playerName; // Store the player's username in the socket object
       console.log(`${playerName} joined room: ${roomName}`);
       io.to(roomName).emit('playerJoined', { playerName });
       io.emit('roomList', rooms); // Update all clients with the updated room list
@@ -74,7 +76,7 @@ io.on('connection', (socket) => {
 
   // Handle disconnection
   socket.on('disconnect', () => {
-    console.log('Client disconnected: '+socket.username); 
+    console.log('Client disconnected: ' + socket.username); 
     // Check if the disconnecting client is in any room
     for (const roomName in rooms) {
       const room = rooms[roomName];
