@@ -90,7 +90,8 @@
     document.getElementById('sendMessage').addEventListener('click', () => {
       const message = document.getElementById('message').value;
       const gameCode = document.getElementById('gameCode').value;
-      const data = { username: 'User', message, roomName: gameCode };
+      const playerName = document.getElementById('playerName').value;
+      const data = { username: playerName, message, roomName: gameCode };
       console.log(`Sending message: ${message}`);
       socket.emit('sendMessage', data);
     });
