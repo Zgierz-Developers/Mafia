@@ -40,6 +40,7 @@ io.on('connection', (socket) => {
       socket.join(roomName);
       console.log(`Room created: ${roomName} by ${ownerName}`);
       io.emit('roomList', rooms); // Update all clients with the new room list
+      io.to(roomName).emit('message', { username: 'System', message: `${ownerName} created the room.` });
     }
   });
 
@@ -51,6 +52,7 @@ io.on('connection', (socket) => {
       console.log(`${playerName} joined room: ${roomName}`);
       io.to(roomName).emit('playerJoined', { playerName });
       io.emit('roomList', rooms); // Update all clients with the updated room list
+      io.to(roomName).emit('message', { username: 'System', message: `${playerName} joined the room.` });
     } else {
       socket.emit('error', { message: 'Room does not exist' });
     }
@@ -81,8 +83,9 @@ io.on('connection', (socket) => {
 
       if (playerIndex !== -1) {
         // Remove the player from the room
-        room.players.splice(playerIndex, 1);
-        console.log(`${socket.username} left room: ${roomName}`);
+        const playerName = room.players.splice(playerIndex, 1)[0];
+        console.log(`${playerName} left room: ${roomName}`);
+        io.to(roomName).emit('message', { username: 'System', message: `${playerName} left the room.` });
 
         if (room.hostSocketId === socket.id) {
           console.log(`Host of room ${roomName} disconnected.`);
@@ -93,6 +96,7 @@ io.on('connection', (socket) => {
             room.hostSocketId = Object.keys(io.sockets.sockets).find(id => io.sockets.sockets[id].username === newHost);
             console.log(`New host of room ${roomName} is ${newHost}`);
             io.to(roomName).emit('newHost', { newHost });
+            io.to(roomName).emit('message', { username: 'System', message: `${newHost} is the new host.` });
           } else {
             // Delete the room if it becomes empty
             console.log(`Deleting room ${roomName}`);

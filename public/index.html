@@ -91,6 +91,10 @@
       const message = document.getElementById('message').value;
       const gameCode = document.getElementById('gameCode').value;
       const playerName = document.getElementById('playerName').value;
+      if (!playerName) {
+        alert('Please enter your name before sending a message.');
+        return;
+      }
       const data = { username: playerName, message, roomName: gameCode };
       console.log(`Sending message: ${message}`);
       socket.emit('sendMessage', data);
