@@ -32,7 +32,7 @@ android {
 }
 
 dependencies {
-    implementation("io.socket:socket.io-client:2.0.0") {
+    implementation("io.socket:socket.io-client:2.0.1") {
         exclude(group = "org.json", module = "json")
     }
     implementation(libs.appcompat)

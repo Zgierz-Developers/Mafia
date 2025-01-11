@@ -5,70 +5,28 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/gameCodeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Kod gry:" />
     <EditText
         android:id="@+id/nicknameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Wprowadź nick" />
+        android:hint="Enter Nickname" />
 
     <EditText
         android:id="@+id/gameCodeEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Wprowadź kod gry (1234)"
-        android:inputType="number"
-        android:maxLength="4" />
+        android:hint="Enter Game Code" />
 
     <Button
-        android:id="@+id/hostButton"
+        android:id="@+id/joinButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hostuj grę" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        orientation="horizontal">
-        <Button
-            android:id="@+id/joinButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dołącz do gry" />
-        <Button
-            android:id="@+id/disconnectButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rozłącz" />
-    </LinearLayout>
-    <TextView
-        android:id="@+id/playersTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Gracze:" />
-
-    <ListView
-        android:id="@+id/playersListView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <EditText
-        android:id="@+id/chatEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Wprowadź wiadomość" />
+        android:text="Join" />
 
     <Button
-        android:id="@+id/sendButton"
+        android:id="@+id/disconnectButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Wyślij" />
-
-    <TextView
-        android:id="@+id/chatTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
+        android:text="Disconnect"
+        android:enabled="false" />
 </LinearLayout>

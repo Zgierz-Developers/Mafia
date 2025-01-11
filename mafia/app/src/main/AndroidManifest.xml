@@ -14,17 +14,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mafia"
         tools:targetApi="31">
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
+        <activity android:exported="true" android:name=".MenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Lobby" android:exported="true" />
-        <activity android:name=".Host" android:exported="true" />
+        <activity android:name=".ServerListActivity" />
+        <activity android:name=".CurrentRoomActivity" />
 
     </application>
 
