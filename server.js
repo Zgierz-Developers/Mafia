@@ -74,8 +74,7 @@ io.on('connection', (socket) => {
 
   // Handle disconnection
   socket.on('disconnect', () => {
-    console.log('Client disconnected');
-
+    console.log('Client disconnected: '+socket.username); 
     // Check if the disconnecting client is in any room
     for (const roomName in rooms) {
       const room = rooms[roomName];
