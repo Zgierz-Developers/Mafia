@@ -3,21 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Socket.IO Polling Test</title>
+  <title>Socket.IO WebSocket Test</title>
 </head>
 <body>
-  <h1>Socket.IO Polling Test</h1>
+  <h1>Socket.IO WebSocket Test</h1>
+  <input type="text" id="roomName" placeholder="Enter room name">
+  <input type="text" id="ownerName" placeholder="Enter your name">
+  <button id="createRoom">Create Room</button>
+  <br><br>
   <input type="text" id="gameCode" placeholder="Enter game code">
+  <input type="text" id="playerName" placeholder="Enter your name">
   <button id="joinGame">Join Game</button>
+  <br><br>
+  <button id="listRooms">List Rooms</button>
+  <ul id="roomsList"></ul>
   <br><br>
   <input type="text" id="message" placeholder="Enter message">
   <button id="sendMessage">Send Message</button>
   <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
   <script>
     // Connect to the Socket.IO server
-    const socket = io('https://mafia-3zvq.onrender.com', {
-      transports: ["polling"] // Force polling transport
-    });
+    const socket = io('https://mafia-3zvq.onrender.com');
 
     // Listen for the 'connect' event
     socket.on('connect', () => {
@@ -34,7 +40,18 @@
     });
 
     socket.on('playerJoined', (data) => {
-      console.log(`Player joined game: ${data.gameCode}`);
+      console.log(`Player joined game: ${data.playerName}`);
+    });
+
+    socket.on('roomList', (rooms) => {
+      const roomsList = document.getElementById('roomsList');
+      roomsList.innerHTML = '';
+      for (const roomName in rooms) {
+        const room = rooms[roomName];
+        const listItem = document.createElement('li');
+        listItem.textContent = `Room: ${roomName}, Owner: ${room.owner}, Players: ${room.players.length}`;
+        roomsList.appendChild(listItem);
+      }
     });
 
     // Listen for the 'disconnect' event
@@ -42,11 +59,26 @@
       console.log('Disconnected from server');
     });
 
+    // Create room
+    document.getElementById('createRoom').addEventListener('click', () => {
+      const roomName = document.getElementById('roomName').value;
+      const ownerName = document.getElementById('ownerName').value;
+      console.log(`Creating room: ${roomName} by ${ownerName}`);
+      socket.emit('createRoom', { roomName, ownerName });
+    });
+
     // Join game
     document.getElementById('joinGame').addEventListener('click', () => {
       const gameCode = document.getElementById('gameCode').value;
-      console.log(`Joining game: ${gameCode}`);
-      socket.emit('joinGame', gameCode);
+      const playerName = document.getElementById('playerName').value;
+      console.log(`Joining game: ${gameCode} as ${playerName}`);
+      socket.emit('joinRoom', { roomName: gameCode, playerName });
+    });
+
+    // List rooms
+    document.getElementById('listRooms').addEventListener('click', () => {
+      console.log('Listing rooms');
+      socket.emit('listRooms');
     });
 
     // Send message

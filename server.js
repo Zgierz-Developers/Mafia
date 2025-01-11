@@ -7,14 +7,13 @@ const path = require('path');
 const app = express();
 const server = http.createServer(app);
 
-// Configure Socket.IO to use polling as the transport method for better compatibility
+// Configure Socket.IO
 const io = socketIO(server, {
   cors: {
     origin: "*",  // Allow all origins, adjust this if needed for security
     methods: ["GET", "POST"],
     credentials: true
-  },
-  transports: ['polling'] // Use polling to ensure compatibility
+  }
 });
 
 const PORT = process.env.PORT || 8080;
@@ -25,20 +24,44 @@ app.use(cors());  // Enable CORS for cross-origin requests
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+// In-memory storage for rooms
+const rooms = {};
+
 // Socket.IO Connection Event
 io.on('connection', (socket) => {
   console.log('New client connected');
 
-  // Handle joining a game
-  socket.on('joinGame', (gameCode) => {
-    socket.join(gameCode);
-    console.log(`Client joined game: ${gameCode}`);
-
-    // Notify other players in the game about the new player
-    socket.to(gameCode).emit('playerJoined');
+  // Handle creating a room
+  socket.on('createRoom', ({ roomName, ownerName }) => {
+    if (rooms[roomName]) {
+      socket.emit('error', { message: 'Room already exists' });
+    } else {
+      rooms[roomName] = { owner: ownerName, players: [ownerName] };
+      socket.join(roomName);
+      console.log(`Room created: ${roomName} by ${ownerName}`);
+      io.emit('roomList', rooms); // Update all clients with the new room list
+    }
   });
 
-  // Handle sending a message in a game
+  // Handle joining a room
+  socket.on('joinRoom', ({ roomName, playerName }) => {
+    if (rooms[roomName]) {
+      rooms[roomName].players.push(playerName);
+      socket.join(roomName);
+      console.log(`${playerName} joined room: ${roomName}`);
+      io.to(roomName).emit('playerJoined', { playerName });
+      io.emit('roomList', rooms); // Update all clients with the updated room list
+    } else {
+      socket.emit('error', { message: 'Room does not exist' });
+    }
+  });
+
+  // Handle listing rooms
+  socket.on('listRooms', () => {
+    socket.emit('roomList', rooms);
+  });
+
+  // Handle sending a message in a room
   socket.on('sendMessage', (data) => {
     console.log(`Message from ${data.username}: ${data.message}`);
     socket.to(data.gameCode).emit('message', data);
@@ -50,6 +73,7 @@ io.on('connection', (socket) => {
   // Handle disconnection
   socket.on('disconnect', () => {
     console.log('Client disconnected');
+    // Optionally, handle player leaving rooms and updating room lists
   });
 });
 
