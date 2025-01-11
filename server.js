@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
     if (rooms[roomName]) {
       socket.emit('error', { message: 'Room already exists' });
     } else {
-      rooms[roomName] = { owner: ownerName, players: [ownerName] };
+      rooms[roomName] = { owner: ownerName, players: [ownerName], hostSocketId: socket.id };
       socket.join(roomName);
       console.log(`Room created: ${roomName} by ${ownerName}`);
       io.emit('roomList', rooms); // Update all clients with the new room list
@@ -73,7 +73,28 @@ io.on('connection', (socket) => {
   // Handle disconnection
   socket.on('disconnect', () => {
     console.log('Client disconnected');
-    // Optionally, handle player leaving rooms and updating room lists
+
+    // Check if the disconnecting client is the host of any room
+    for (const roomName in rooms) {
+      if (rooms[roomName].hostSocketId === socket.id) {
+        console.log(`Host of room ${roomName} disconnected.`);
+        if (rooms[roomName].players.length > 1) {
+          // Promote a new host
+          rooms[roomName].players = rooms[roomName].players.filter(player => player !== rooms[roomName].owner);
+          const newHost = rooms[roomName].players[0];
+          rooms[roomName].owner = newHost;
+          rooms[roomName].hostSocketId = Object.keys(io.sockets.sockets).find(id => io.sockets.sockets[id].username === newHost);
+          console.log(`New host of room ${roomName} is ${newHost}`);
+          io.to(roomName).emit('newHost', { newHost });
+        } else {
+          // Delete the room if it becomes empty
+          console.log(`Deleting room ${roomName}`);
+          delete rooms[roomName];
+        }
+        io.emit('roomList', rooms); // Update all clients with the updated room list
+        break;
+      }
+    }
   });
 });
 
