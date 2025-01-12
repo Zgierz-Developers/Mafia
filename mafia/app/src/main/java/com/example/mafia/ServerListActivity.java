@@ -41,14 +41,10 @@ public class ServerListActivity extends AppCompatActivity {
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, serverList);
         serverListView.setAdapter(adapter);
 
-        try {
-            socket = IO.socket("https://mafia-3zvq.onrender.com");
-            socket.connect();
-            socket.on(Socket.EVENT_CONNECT, onConnect);
-            socket.on("roomList", onRoomList);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        socket = SocketManager.getSocket();
+        socket.connect();
+        socket.on(Socket.EVENT_CONNECT, onConnect);
+        socket.on("roomList", onRoomList);
 
         refreshButton.setOnClickListener(v -> fetchServerList());
 

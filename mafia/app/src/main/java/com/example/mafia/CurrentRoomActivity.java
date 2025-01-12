@@ -48,25 +48,20 @@ public class CurrentRoomActivity extends AppCompatActivity {
         messagesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         messagesRecyclerView.setAdapter(messageAdapter);
 
-        try {
-            socket = IO.socket("https://mafia-3zvq.onrender.com");
-            socket.connect();
-            socket.on(Socket.EVENT_CONNECT, args -> {
-                JSONObject joinData = new JSONObject();
-                try {
-                    joinData.put("room", roomName);
-                    joinData.put("username", nickname);
-                    socket.emit("join", joinData);
-                    Log.d("CurrentRoomActivity", "Joined room: " + roomName);
-                } catch (JSONException e) {
-                    Log.e("CurrentRoomActivity", "JSON error", e);
-                }
-            });
-            socket.on("message", this::onMessage);
-            Log.d("CurrentRoomActivity", "Socket connected and listener registered");
-        } catch (URISyntaxException e) {
-            Log.e("CurrentRoomActivity", "Socket connection error", e);
-        }
+        socket = SocketManager.getSocket();
+        socket.on(Socket.EVENT_CONNECT, args -> {
+            JSONObject joinData = new JSONObject();
+            try {
+                joinData.put("room", roomName);
+                joinData.put("username", nickname);
+                socket.emit("joinRoom", joinData);
+                Log.d("CurrentRoomActivity", "Joined room: " + roomName);
+            } catch (JSONException e) {
+                Log.e("CurrentRoomActivity", "JSON error", e);
+            }
+        });
+        socket.on("message", this::onMessage);
+        Log.d("CurrentRoomActivity", "Socket connected and listener registered");
 
         sendButton.setOnClickListener(v -> {
             String message = messageEditText.getText().toString();
