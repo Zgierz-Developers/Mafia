@@ -10,6 +10,7 @@ const server = http.createServer(app);
 // Configure Socket.IO
 const io = socketIO(server, {
   cors: {
+    allowEIO3: true, // Enables compatibility with Socket.IO v2.x clients
     origin: "*",  // Allow all origins, adjust this if needed for security
     methods: ["GET", "POST"],
     credentials: true
@@ -38,8 +39,10 @@ io.on('connection', (socket) => {
     } else {
       rooms[roomName] = { owner: ownerName, players: [ownerName], hostSocketId: socket.id };
       socket.join(roomName);
+      socket.username = ownerName; // Store the owner's username in the socket object
       console.log(`Room created: ${roomName} by ${ownerName}`);
       io.emit('roomList', rooms); // Update all clients with the new room list
+      io.to(roomName).emit('message', { username: 'System', message: `${ownerName} created the room.` });
     }
   });
 
@@ -48,17 +51,11 @@ io.on('connection', (socket) => {
     if (rooms[roomName]) {
       rooms[roomName].players.push(playerName);
       socket.join(roomName);
+      socket.username = playerName; // Store the player's username in the socket object
       console.log(`${playerName} joined room: ${roomName}`);
       io.to(roomName).emit('playerJoined', { playerName });
       io.emit('roomList', rooms); // Update all clients with the updated room list
-
-      // Send socket information back to the player
-      socket.emit('socketInfo', {
-        socketId: socket.id,
-        username: playerName,
-        roomName: roomName
-      });
-      
+      io.to(roomName).emit('message', { username: 'System', message: `${playerName} joined the room.` });
     } else {
       socket.emit('error', { message: 'Room does not exist' });
     }
@@ -71,7 +68,7 @@ io.on('connection', (socket) => {
 
   // Handle sending a message in a room
   socket.on('sendMessage', (data) => {
-    console.log(`Message from ${data.username}: ${data.message}`);
+    console.log(`Message from ${data.username}: ${data.message} data: ${data}`);
     socket.to(data.gameCode).emit('message', data);
     console.log(`Message sent to room ${data.gameCode}`);
   });
@@ -81,25 +78,35 @@ io.on('connection', (socket) => {
 
   // Handle disconnection
   socket.on('disconnect', () => {
-    console.log('Client disconnected');
-
-    // Check if the disconnecting client is the host of any room
+    console.log('Client disconnected: ' + socket.username); 
+    // Check if the disconnecting client is in any room
     for (const roomName in rooms) {
-      if (rooms[roomName].hostSocketId === socket.id) {
-        console.log(`Host of room ${roomName} disconnected.`);
-        if (rooms[roomName].players.length > 1) {
-          // Promote a new host
-          rooms[roomName].players = rooms[roomName].players.filter(player => player !== rooms[roomName].owner);
-          const newHost = rooms[roomName].players[0];
-          rooms[roomName].owner = newHost;
-          rooms[roomName].hostSocketId = Object.keys(io.sockets.sockets).find(id => io.sockets.sockets[id].username === newHost);
-          console.log(`New host of room ${roomName} is ${newHost}`);
-          io.to(roomName).emit('newHost', { newHost });
-        } else {
-          // Delete the room if it becomes empty
-          console.log(`Deleting room ${roomName}`);
-          delete rooms[roomName];
+      const room = rooms[roomName];
+      const playerIndex = room.players.indexOf(socket.username);
+
+      if (playerIndex !== -1) {
+        // Remove the player from the room
+        const playerName = room.players.splice(playerIndex, 1)[0];
+        console.log(`${playerName} left room: ${roomName}`);
+        io.to(roomName).emit('message', { username: 'System', message: `${playerName} left the room.` });
+
+        if (room.hostSocketId === socket.id) {
+          console.log(`Host of room ${roomName} disconnected.`);
+          if (room.players.length > 0) {
+            // Promote a new host
+            const newHost = room.players[0];
+            room.owner = newHost;
+            room.hostSocketId = Object.keys(io.sockets.sockets).find(id => io.sockets.sockets[id].username === newHost);
+            console.log(`New host of room ${roomName} is ${newHost}`);
+            io.to(roomName).emit('newHost', { newHost });
+            io.to(roomName).emit('message', { username: 'System', message: `${newHost} is the new host.` });
+          } else {
+            // Delete the room if it becomes empty
+            console.log(`Deleting room ${roomName}`);
+            delete rooms[roomName];
+          }
         }
+
         io.emit('roomList', rooms); // Update all clients with the updated room list
         break;
       }
