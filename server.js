@@ -10,6 +10,7 @@ const server = http.createServer(app);
 // Configure Socket.IO
 const io = socketIO(server, {
   cors: {
+    allowEIO3: true, // Enables compatibility with Socket.IO v2.x clients
     origin: "*",  // Allow all origins, adjust this if needed for security
     methods: ["GET", "POST"],
     credentials: true
