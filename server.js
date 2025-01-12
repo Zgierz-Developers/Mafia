@@ -7,9 +7,13 @@ const path = require('path');
 const app = express();
 const server = http.createServer(app);
 
-// Configure Socket.IO for v2.1.1
+// Configure Socket.IO
 const io = socketIO(server, {
-  origins: "*:*"  // Allow all origins
+  cors: {
+    origin: "*",  // Allow all origins, adjust this if needed for security
+    methods: ["GET", "POST"],
+    credentials: true
+  }
 });
 
 const PORT = process.env.PORT || 8080;
