@@ -68,7 +68,7 @@ io.on('connection', (socket) => {
 
   // Handle sending a message in a room
   socket.on('sendMessage', (data) => {
-    console.log(`Message from ${data.username}: ${data.message}`);
+    console.log(`Message from ${data.username}: ${data.message} data: ${data}`);
     io.to(data.roomName).emit('message', data); // Broadcast message to all players in the room
   });
 
