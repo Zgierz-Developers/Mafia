@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.socket.client.IO;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CurrentRoomActivity extends AppCompatActivity {
@@ -51,10 +51,21 @@ public class CurrentRoomActivity extends AppCompatActivity {
         try {
             socket = IO.socket("https://mafia-3zvq.onrender.com");
             socket.connect();
-            socket.on("message", onMessage);
+            socket.on(Socket.EVENT_CONNECT, args -> {
+                JSONObject joinData = new JSONObject();
+                try {
+                    joinData.put("room", roomName);
+                    joinData.put("username", nickname);
+                    socket.emit("join", joinData);
+                    Log.d("CurrentRoomActivity", "Joined room: " + roomName);
+                } catch (JSONException e) {
+                    Log.e("CurrentRoomActivity", "JSON error", e);
+                }
+            });
+            socket.on("message", this::onMessage);
             Log.d("CurrentRoomActivity", "Socket connected and listener registered");
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            Log.e("CurrentRoomActivity", "Socket connection error", e);
         }
 
         sendButton.setOnClickListener(v -> {
@@ -79,10 +90,10 @@ public class CurrentRoomActivity extends AppCompatActivity {
         }
     }
 
-    private Emitter.Listener onMessage = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            runOnUiThread(() -> {
+    private void onMessage(Object... args) {
+        runOnUiThread(() -> {
+            Log.d("CurrentRoomActivity", "onMessage called with args: " + Arrays.toString(args));
+            if (args.length > 0 && args[0] instanceof JSONObject) {
                 JSONObject data = (JSONObject) args[0];
                 try {
                     String username = data.getString("username");
@@ -92,16 +103,18 @@ public class CurrentRoomActivity extends AppCompatActivity {
                     messageAdapter.notifyItemInserted(messageList.size() - 1);
                     messagesRecyclerView.scrollToPosition(messageList.size() - 1);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e("CurrentRoomActivity", "JSON parsing error", e);
                 }
-            });
-        }
-    };
+            } else {
+                Log.e("CurrentRoomActivity", "Invalid message data received");
+            }
+        });
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         socket.disconnect();
-        socket.off("message", onMessage);
+        socket.off("message", this::onMessage);
     }
 }

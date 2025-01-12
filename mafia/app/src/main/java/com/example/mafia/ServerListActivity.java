@@ -106,27 +106,17 @@ public class ServerListActivity extends AppCompatActivity {
         }
     }
 
-    private Emitter.Listener onConnect = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            fetchServerList();
-        }
-    };
+    private final Emitter.Listener onConnect = args -> fetchServerList();
 
-    private Emitter.Listener onRoomList = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            runOnUiThread(() -> {
-                serverList.clear();
-                JSONObject rooms = (JSONObject) args[0];
-                for (Iterator<String> it = rooms.keys(); it.hasNext(); ) {
-                    String roomName = it.next();
-                    serverList.add(roomName);
-                }
-                adapter.notifyDataSetChanged();
-            });
+    private final Emitter.Listener onRoomList = args -> runOnUiThread(() -> {
+        serverList.clear();
+        JSONObject rooms = (JSONObject) args[0];
+        for (Iterator<String> it = rooms.keys(); it.hasNext(); ) {
+            String roomName = it.next();
+            serverList.add(roomName);
         }
-    };
+        adapter.notifyDataSetChanged();
+    });
 
     @Override
     protected void onDestroy() {
