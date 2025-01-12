@@ -51,6 +51,14 @@ io.on('connection', (socket) => {
       console.log(`${playerName} joined room: ${roomName}`);
       io.to(roomName).emit('playerJoined', { playerName });
       io.emit('roomList', rooms); // Update all clients with the updated room list
+
+      // Send socket information back to the player
+      socket.emit('socketInfo', {
+        socketId: socket.id,
+        username: playerName,
+        roomName: roomName
+      });
+      
     } else {
       socket.emit('error', { message: 'Room does not exist' });
     }
