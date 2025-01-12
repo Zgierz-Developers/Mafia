@@ -63,6 +63,8 @@ public class CurrentRoomActivity extends AppCompatActivity {
         });
     }
 
+
+
     private void sendMessage(String message) {
         try {
             JSONObject data = new JSONObject();
@@ -71,7 +73,7 @@ public class CurrentRoomActivity extends AppCompatActivity {
             data.put("gameCode", roomName);
             socket.emit("sendMessage", data);
             messageEditText.setText("");
-            Log.d("CurrentRoomActivity", "Sent message: " + message);
+            Log.d("CurrentRoomActivity", "Sent message: " + message + " to " + roomName + " as " + nickname + " with data: " + data);
         } catch (JSONException e) {
             e.printStackTrace();
         }
