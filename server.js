@@ -79,10 +79,9 @@ io.on('connection', (socket) => {
   // Handle disconnection
   socket.on('disconnect', () => {
     console.log('Client disconnected: ' + socket.username); 
-    const roomName = socket.roomName;
-    const room = rooms[roomName];
-
-    if (room) {
+    // Check if the disconnecting client is in any room
+    for (const roomName in rooms) {
+      const room = rooms[roomName];
       const playerIndex = room.players.indexOf(socket.username);
 
       if (playerIndex !== -1) {
@@ -106,13 +105,10 @@ io.on('connection', (socket) => {
             console.log(`Deleting room ${roomName}`);
             delete rooms[roomName];
           }
-        } else if (room.players.length === 0) {
-          // Delete the room if it becomes empty
-          console.log(`Deleting room ${roomName}`);
-          delete rooms[roomName];
         }
 
         io.emit('roomList', rooms); // Update all clients with the updated room list
+        break;
       }
     }
   });
