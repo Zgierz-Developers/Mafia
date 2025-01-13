@@ -15,12 +15,12 @@
           <targets>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\anton\.android\avd\pixel_5_-_api_34.avd" />
+                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\kacpe\.android\avd\Dziad_dwa.avd" />
               </handle>
             </Target>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\anton\.android\avd\Pixel_5_API_34_v2.avd" />
+                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\kacpe\.android\avd\dziad_jeden.avd" />
               </handle>
             </Target>
           </targets>

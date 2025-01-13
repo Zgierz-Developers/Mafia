@@ -78,6 +78,9 @@ public class CurrentRoomActivity extends AppCompatActivity {
             data.put("message", message);
             data.put("gameCode", roomName);
             socket.emit("sendMessage", data);
+            messageList.add(new Message(nickname, message));
+            messageAdapter.notifyItemInserted(messageList.size() - 1);
+            messagesRecyclerView.scrollToPosition(messageList.size() - 1);
             messageEditText.setText("");
             Log.d("CurrentRoomActivity", "Sent message: " + message + " to " + roomName + " as " + nickname + " with data: " + data);
         } catch (JSONException e) {
