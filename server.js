@@ -49,7 +49,9 @@ io.on('connection', (socket) => {
   // Handle joining a room
   socket.on('joinRoom', ({ roomName, playerName }) => {
     if (rooms[roomName]) {
-      rooms[roomName].players.push(playerName);
+      if (!rooms[roomName].players.includes(playerName)) {
+        rooms[roomName].players.push(playerName);
+      }
       socket.join(roomName);
       socket.username = playerName; // Store the player's username in the socket object
       console.log(`${playerName} joined room: ${roomName}`);
@@ -78,7 +80,7 @@ io.on('connection', (socket) => {
 
   // Handle disconnection
   socket.on('disconnect', () => {
-    console.log('Client disconnected: ' + socket.username); 
+    console.log('Client disconnected: ' + socket.username);
     // Check if the disconnecting client is in any room
     for (const roomName in rooms) {
       const room = rooms[roomName];
