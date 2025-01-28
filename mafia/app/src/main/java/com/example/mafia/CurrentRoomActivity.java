@@ -22,6 +22,7 @@ public class CurrentRoomActivity extends AppCompatActivity {
     private TextView roomDetailsTextView;
     private EditText messageEditText;
     private Button sendButton;
+    private Button leaveButton;
     private RecyclerView messagesRecyclerView;
     private MessageAdapter messageAdapter;
     private List<Message> messageList = new ArrayList<>();
@@ -37,6 +38,7 @@ public class CurrentRoomActivity extends AppCompatActivity {
         roomDetailsTextView = findViewById(R.id.roomDetailsTextView);
         messageEditText = findViewById(R.id.messageEditText);
         sendButton = findViewById(R.id.sendButton);
+        leaveButton = findViewById(R.id.leaveButton);
         messagesRecyclerView = findViewById(R.id.messagesRecyclerView);
 
         roomName = getIntent().getStringExtra("roomName");
@@ -66,6 +68,22 @@ public class CurrentRoomActivity extends AppCompatActivity {
         sendButton.setOnClickListener(v -> {
             String message = messageEditText.getText().toString();
             sendMessage(message);
+        });
+
+        leaveButton.setOnClickListener(v -> {
+            if (socket != null) {
+                JSONObject leaveData = new JSONObject();
+                try {
+                    leaveData.put("roomName", roomName);
+                    leaveData.put("username", nickname);
+                    socket.emit("leaveRoom", leaveData);
+                    Log.d("CurrentRoomActivity", "Left room: " + roomName);
+                } catch (JSONException e) {
+                    Log.e("CurrentRoomActivity", "JSON error", e);
+                }
+                socket.off("message", this::onMessage);
+            }
+            finish();
         });
     }
 
@@ -112,7 +130,6 @@ public class CurrentRoomActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        socket.disconnect();
         socket.off("message", this::onMessage);
     }
 }
