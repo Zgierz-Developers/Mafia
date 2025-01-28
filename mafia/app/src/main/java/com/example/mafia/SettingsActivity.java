@@ -92,4 +92,5 @@ public class SettingsActivity extends AppCompatActivity implements AvatarAdapter
     public int getSelectedAvatar(){
         return selectedAvatar;
     }
+
 }
