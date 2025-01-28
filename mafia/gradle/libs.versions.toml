@@ -1,12 +1,14 @@
 [versions]
-agp = "8.7.3"
+agp = "8.3.0" #zmienione na stabilną wersję
 junit = "4.13.2"
-junitVersion = "1.2.1"
-espressoCore = "3.6.1"
-appcompat = "1.7.0"
-material = "1.12.0"
-activity = "1.9.3"
-constraintlayout = "2.2.0"
+junitVersion = "1.1.5" #zmienione na stabilną wersję
+espressoCore = "3.5.1" #zmienione na stabilną wersję
+appcompat = "1.6.1" #zmienione na stabilną wersję
+material = "1.11.0" #zmienione na stabilną wersję
+activity = "1.8.2" #zmienione na stabilną wersję
+constraintlayout = "2.1.4" #zmienione na stabilną wersję
+socket-io-client = "2.1.1"
+glide = "4.16.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -14,9 +16,11 @@ ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitV
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+activity = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" } #dodane ktx
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+socket-io-client = { group = "io.socket", name = "socket.io-client", version.ref = "socket-io-client" }
+glide-glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-
