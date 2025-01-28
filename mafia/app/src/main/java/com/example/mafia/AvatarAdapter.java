@@ -1,4 +1,4 @@
 package com.example.mafia;
 
-public class Settings {
+public class AvatarAdapter {
 }
