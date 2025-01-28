@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MenuActivity extends AppCompatActivity {
 
     private Button serverListButton;
+    private Button settingsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,10 +16,17 @@ public class MenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
 
         serverListButton = findViewById(R.id.serverListButton);
+        settingsButton = findViewById(R.id.settingsButton);
 
         serverListButton.setOnClickListener(v -> {
             Intent intent = new Intent(MenuActivity.this, ServerListActivity.class);
             startActivity(intent);
         });
+
+        settingsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MenuActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        });
+
     }
 }

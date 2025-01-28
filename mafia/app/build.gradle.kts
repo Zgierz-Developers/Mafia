@@ -32,9 +32,12 @@ android {
 }
 
 dependencies {
-    implementation("io.socket:socket.io-client:2.1.1") {
+    implementation(libs.socket.io.client) {
         exclude(group = "org.json", module = "json")
     }
+    implementation(libs.glide.glide)
+    implementation("androidx.cardview:cardview:1.0.0")
+    annotationProcessor(libs.glide.compiler)
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

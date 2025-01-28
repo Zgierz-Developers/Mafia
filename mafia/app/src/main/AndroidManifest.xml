@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".ServerListActivity" />
         <activity android:name=".CurrentRoomActivity" />
+        <activity android:name=".SettingsActivity" />
 
     </application>
 

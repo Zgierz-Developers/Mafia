@@ -1,23 +1,14 @@
 package com.example.mafia;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,13 +39,13 @@ public class SettingsActivity extends AppCompatActivity implements AvatarAdapter
         avatarDrawables.add(R.drawable.profile_logo_4);
         // Dodaj więcej ikon, jeśli masz
 
-        // Pobierz zapisany nick i ikonę (jeśli istnieją)
-        loadSavedData();
-
         // Ustawienie adaptera dla RecyclerView
         avatarAdapter = new AvatarAdapter(this, avatarDrawables, this);
         avatarsRecyclerView.setAdapter(avatarAdapter);
         avatarsRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+
+        // Pobierz zapisany nick i ikonę (jeśli istnieją)
+        loadSavedData();
 
         saveButton.setOnClickListener(v -> saveSettings());
     }

@@ -18,11 +18,6 @@
                 <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\kacpe\.android\avd\Copy_of_Dziad_dwa.avd" />
               </handle>
             </Target>
-            <Target type="DEFAULT_BOOT">
-              <handle>
-                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\kacpe\.android\avd\Dziad_szosty.avd" />
-              </handle>
-            </Target>
           </targets>
         </DialogSelection>
       </SelectionState>
