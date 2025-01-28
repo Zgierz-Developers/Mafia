@@ -75,6 +75,37 @@ io.on('connection', (socket) => {
     console.log(`Message sent to room ${data.gameCode}`);
   });
 
+  // Handle leaving a room
+  socket.on('leaveRoom', ({ roomName, username }) => {
+    if (rooms[roomName]) {
+      const room = rooms[roomName];
+      const playerIndex = room.players.indexOf(username);
+
+      if (playerIndex !== -1) {
+        room.players.splice(playerIndex, 1);
+        console.log(`${username} left room: ${roomName}`);
+        io.to(roomName).emit('message', { username: 'System', message: `${username} left the room.` });
+
+        if (room.hostSocketId === socket.id) {
+          console.log(`Host of room ${roomName} left.`);
+          if (room.players.length > 0) {
+            const newHost = room.players[0];
+            room.owner = newHost;
+            room.hostSocketId = Object.keys(io.sockets.sockets).find(id => io.sockets.sockets[id].username === newHost);
+            console.log(`New host of room ${roomName} is ${newHost}`);
+            io.to(roomName).emit('newHost', { newHost });
+            io.to(roomName).emit('message', { username: 'System', message: `${newHost} is the new host.` });
+          } else {
+            console.log(`Deleting room ${roomName}`);
+            delete rooms[roomName];
+          }
+        }
+
+        io.emit('roomList', rooms);
+      }
+    }
+  });
+
   // Send a welcome message to the client
   socket.emit('serverMessage', { message: 'Welcome to the game!' });
 
