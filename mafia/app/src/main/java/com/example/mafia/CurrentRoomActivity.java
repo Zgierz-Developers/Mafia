@@ -35,6 +35,8 @@ public class CurrentRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_current_room);
 
+
+
         roomDetailsTextView = findViewById(R.id.roomDetailsTextView);
         messageEditText = findViewById(R.id.messageEditText);
         sendButton = findViewById(R.id.sendButton);

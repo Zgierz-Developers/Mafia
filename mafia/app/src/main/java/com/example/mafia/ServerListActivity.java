@@ -36,9 +36,9 @@ public class ServerListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ClientData playerData = new ClientData(this);
-        clientNickname = playerData.getClientNickname();
-        clientProfileLogo = playerData.getSelectedAvatar();
+        ClientData clientData = new ClientData(this);
+        clientNickname = clientData.getClientNickname();
+        clientProfileLogo = clientData.getSelectedAvatar();
 
         setContentView(R.layout.activity_server_list);
 

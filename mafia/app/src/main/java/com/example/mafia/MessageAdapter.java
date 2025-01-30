@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,9 +29,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Message message = messageList.get(position);
+
         holder.usernameTextView.setText(message.getUsername());
         holder.messageTextView.setText(message.getMessage());
-        Log.d("MessageAdapter", "Binding message at position " + position + ": " + message.getUsername() + " - " + message.getMessage());
+
+        Log.d("MessageAdapter", "Binding message at position " + position + ": " + message.getUsername() + " - " + message.getMessage() + ", logo ID wiadomość otrzymana");
     }
 
     @Override
@@ -41,6 +44,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView usernameTextView;
         TextView messageTextView;
+        ImageView avatarImageView;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -2,17 +2,15 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
-      <SelectionState runConfigName="app">
+      <SelectionState runConfigName="MenuActivity">
         <option name="selectionMode" value="DIALOG" />
-        <DropdownSelection timestamp="2025-01-13T21:29:05.599629100Z">
-          <Target type="DEFAULT_BOOT">
-            <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\kacpe\.android\avd\Dziad_dwa.avd" />
-            </handle>
-          </Target>
-        </DropdownSelection>
         <DialogSelection>
           <targets>
+            <Target type="DEFAULT_BOOT">
+              <handle>
+                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\kacpe\.android\avd\Copy_of_Copy_of_Dziad_dwa.avd" />
+              </handle>
+            </Target>
             <Target type="DEFAULT_BOOT">
               <handle>
                 <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\kacpe\.android\avd\Copy_of_Dziad_dwa.avd" />
