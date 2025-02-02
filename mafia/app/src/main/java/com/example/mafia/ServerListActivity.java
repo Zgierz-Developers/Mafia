@@ -109,6 +109,7 @@ public class ServerListActivity extends AppCompatActivity {
                     Intent intent = new Intent(ServerListActivity.this, CurrentRoomActivity.class);
                     intent.putExtra("roomName", roomName);
                     intent.putExtra("nickname", clientNickname);
+                    intent.putExtra("selectedAvatar", clientProfileLogo);
                     startActivity(intent);
                 } catch (JSONException e) {
                     e.printStackTrace();
