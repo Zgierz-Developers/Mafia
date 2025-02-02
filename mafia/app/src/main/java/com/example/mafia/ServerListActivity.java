@@ -1,7 +1,9 @@
 package com.example.mafia;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,10 +32,15 @@ public class ServerListActivity extends AppCompatActivity {
     private Button refreshButton, backToMenuButton;
     private Button createRoomButton;
     private Socket socket;
+    private String clientNickname;
+    private Integer clientProfileLogo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ClientData clientData = new ClientData(this);
+        clientNickname = clientData.getClientNickname();
+        clientProfileLogo = clientData.getSelectedAvatar();
         setContentView(R.layout.activity_server_list);
 
         serverListView = findViewById(R.id.serverListView);
@@ -65,34 +72,13 @@ public class ServerListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String roomName = serverList.get(position);
-                showNicknameDialog(roomName);
+                joinRoom(roomName);
             }
         });
     }
 
     private void fetchServerList() {
         socket.emit("listRooms");
-    }
-
-    private void showNicknameDialog(String roomName) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Wpisz nazwę gracza");
-
-        final EditText input = new EditText(this);
-        builder.setView(input);
-
-        builder.setPositiveButton("Join", (dialog, which) -> {
-            String nickname = input.getText().toString();
-            if (!nickname.isEmpty()) {
-                joinRoom(roomName, nickname);
-            } else {
-                Toast.makeText(ServerListActivity.this, "Nickname cannot be empty", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-
-        builder.show();
     }
 
     private void createRoom() {
@@ -107,26 +93,23 @@ public class ServerListActivity extends AppCompatActivity {
         roomNameInput.setHint("Nazwa pokoju");
         layout.addView(roomNameInput);
 
-        final EditText nickNameInput = new EditText(this); // Dodaj definicję nickNameInput
-        nickNameInput.setHint("Nazwa gracza");
-        layout.addView(nickNameInput); // Dodaj nickNameInput do layoutu
-
         builder.setView(layout); // Ustaw layout jako widok dialogu
 
         builder.setPositiveButton("Utwórz", (dialog, which) -> {
             String roomName = roomNameInput.getText().toString();
-            String nickName = nickNameInput.getText().toString();
-            if (!roomName.isEmpty() && !nickName.isEmpty()) { // Sprawdź, czy oba pola są wypełnione
+            if (!roomName.isEmpty() && !clientNickname.isEmpty()) { // Sprawdź, czy oba pola są wypełnione
                 try {
                     JSONObject data = new JSONObject();
                     data.put("roomName", roomName);
-                    data.put("ownerName", nickName);
+                    data.put("ownerName", clientNickname);
+                    data.put("selectedAvatar", clientProfileLogo);
                     socket.emit("createRoom", data);
 
                     // Przejdź do CurrentRoomActivity z nazwą pokoju i nickiem
                     Intent intent = new Intent(ServerListActivity.this, CurrentRoomActivity.class);
                     intent.putExtra("roomName", roomName);
-                    intent.putExtra("nickname", nickName);
+                    intent.putExtra("nickname", clientNickname);
+                    intent.putExtra("selectedAvatar", clientProfileLogo);
                     startActivity(intent);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -141,15 +124,18 @@ public class ServerListActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void joinRoom(String roomName, String nickname) {
+    private void joinRoom(String roomName) {
+        Log.d("Selected Avatar", String.valueOf(clientProfileLogo));
         try {
             JSONObject data = new JSONObject();
             data.put("roomName", roomName);
-            data.put("playerName", nickname);
+            data.put("playerName", clientNickname);
+            data.put("selectedAvatar", clientProfileLogo);
             socket.emit("joinRoom", data);
             Intent intent = new Intent(ServerListActivity.this, CurrentRoomActivity.class);
             intent.putExtra("roomName", roomName);
-            intent.putExtra("nickname", nickname);
+            intent.putExtra("nickname", clientNickname);
+            intent.putExtra("selectedAvatar", clientProfileLogo);
             startActivity(intent);
         } catch (JSONException e) {
             e.printStackTrace();

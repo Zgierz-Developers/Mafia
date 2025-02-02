@@ -2,20 +2,28 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
-      <SelectionState runConfigName="app">
+      <SelectionState runConfigName="MenuActivity">
         <option name="selectionMode" value="DIALOG" />
-        <DropdownSelection timestamp="2025-01-13T21:29:05.599629100Z">
+        <DropdownSelection timestamp="2025-02-02T17:34:56.454275300Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\kacpe\.android\avd\Dziad_dwa.avd" />
+              <DeviceId pluginId="FirebaseDirectAccess" identifier="reservation=projects/device-streaming-e37aa556/deviceSessions/session-6f0ddsyv15nqa" />
             </handle>
+            <template>
+              <DeviceId pluginId="FirebaseDirectAccess" type="TEMPLATE" identifier="model_id=redfin/30" />
+            </template>
           </Target>
         </DropdownSelection>
         <DialogSelection>
           <targets>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\kacpe\.android\avd\Copy_of_Dziad_dwa.avd" />
+                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\kacpe\.android\avd\Pixel_5_API_35_2.avd" />
+              </handle>
+            </Target>
+            <Target type="DEFAULT_BOOT">
+              <handle>
+                <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\kacpe\.android\avd\Pixel_5_API_35.avd" />
               </handle>
             </Target>
           </targets>

@@ -1,5 +1,7 @@
 package com.example.mafia;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -29,11 +31,13 @@ public class CurrentRoomActivity extends AppCompatActivity {
     private String roomName;
     private String nickname;
     private Socket socket;
-
+    private Integer clientProfileLogo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_current_room);
+
+
 
         roomDetailsTextView = findViewById(R.id.roomDetailsTextView);
         messageEditText = findViewById(R.id.messageEditText);
@@ -44,6 +48,8 @@ public class CurrentRoomActivity extends AppCompatActivity {
         roomName = getIntent().getStringExtra("roomName");
         nickname = getIntent().getStringExtra("nickname");
         roomDetailsTextView.setText("Room: " + roomName);
+
+        clientProfileLogo = getIntent().getIntExtra("selectedAvatar", -1);
 
         messageList = new ArrayList<>();
         messageAdapter = new MessageAdapter(messageList);
@@ -95,8 +101,9 @@ public class CurrentRoomActivity extends AppCompatActivity {
             data.put("username", nickname);
             data.put("message", message);
             data.put("gameCode", roomName);
+            data.put("selectedAvatar", clientProfileLogo);
             socket.emit("sendMessage", data);
-            messageList.add(new Message(nickname, message));
+            messageList.add(new Message(nickname, message, clientProfileLogo));
             messageAdapter.notifyItemInserted(messageList.size() - 1);
             messagesRecyclerView.scrollToPosition(messageList.size() - 1);
             messageEditText.setText("");
@@ -114,8 +121,9 @@ public class CurrentRoomActivity extends AppCompatActivity {
                 try {
                     String username = data.getString("username");
                     String message = data.getString("message");
-                    Log.d("CurrentRoomActivity", "Received message: " + message + " from " + username);
-                    messageList.add(new Message(username, message));
+                    Integer clientProfileLogo = data.getInt("selectedAvatar");
+                    Log.d("CurrentRoomActivity", "Received message: " + message + " from " + username + " with logo ID: " + clientProfileLogo);
+                    messageList.add(new Message(username, message, clientProfileLogo));
                     messageAdapter.notifyItemInserted(messageList.size() - 1);
                     messagesRecyclerView.scrollToPosition(messageList.size() - 1);
                 } catch (JSONException e) {

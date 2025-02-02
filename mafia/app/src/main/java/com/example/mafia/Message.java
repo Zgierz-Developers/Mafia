@@ -3,10 +3,12 @@ package com.example.mafia;
 public class Message {
     private String username;
     private String message;
+    private Integer clientProfileLogo;
 
-    public Message(String username, String message) {
+    public Message(String username, String message, Integer clientProfileLogo) {
         this.username = username;
         this.message = message;
+        this.clientProfileLogo = clientProfileLogo;
     }
 
     public String getUsername() {
@@ -16,6 +18,8 @@ public class Message {
     public String getMessage() {
         return message;
     }
+
+    public Integer getClientProfileLogo() {return clientProfileLogo; }
 
     @Override
     public String toString() {
