@@ -54,16 +54,16 @@ io.on("connection", (socket) => {
   });
 
   // Handle joining a room
-  socket.on("joinRoom", ({ roomName, playerName, clientProfileLogo }) => {
+  socket.on("joinRoom", ({ roomName, playerName, selectedAvatar }) => {
     if (rooms[roomName]) {
       if (!rooms[roomName].players.includes(playerName)) {
         rooms[roomName].players.push(playerName);
       }
       socket.join(roomName);
       socket.username = playerName; // Store the player's username in the socket object
-      socket.clientProfileLogo = clientProfileLogo; // Store the player's client profile logo in the socket object
+      socket.selectedAvatar = selectedAvatar; // Store the player's client profile logo in the socket object
       console.log(
-        `${playerName} joined room: ${roomName} with client profile logo: ${clientProfileLogo}`
+        `${playerName} joined room: ${roomName} with client profile logo: ${selectedAvatar}`
       );
       io.to(roomName).emit("playerJoined", { playerName });
       io.emit("roomList", rooms); // Update all clients with the updated room list
