@@ -66,9 +66,9 @@ io.on("connection", (socket) => {
       console.log(
         `${playerName} joined room: ${roomName} with client profile logo: ${selectedAvatar}`
       );
-      io.to(roomName).emit("playerJoined", { playerName });
-      io.emit("roomList", rooms); // Update all clients with the updated room list
-      io.to(roomName).emit("message", {
+      socket.to(roomName).emit("playerJoined", { playerName });
+      socket.emit("roomList", rooms); // Update all clients with the updated room list
+      socket.to(roomName).emit("message", {
         username: "System",
         message: `${playerName} joined the room.`,
         profile_pic: selectedAvatar,
