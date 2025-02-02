@@ -1,7 +1,9 @@
 package com.example.mafia;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -39,7 +41,6 @@ public class ServerListActivity extends AppCompatActivity {
         ClientData clientData = new ClientData(this);
         clientNickname = clientData.getClientNickname();
         clientProfileLogo = clientData.getSelectedAvatar();
-
         setContentView(R.layout.activity_server_list);
 
         serverListView = findViewById(R.id.serverListView);
@@ -123,6 +124,7 @@ public class ServerListActivity extends AppCompatActivity {
     }
 
     private void joinRoom(String roomName) {
+        Log.d("Selected Avatar", String.valueOf(clientProfileLogo));
         try {
             JSONObject data = new JSONObject();
             data.put("roomName", roomName);
@@ -132,6 +134,7 @@ public class ServerListActivity extends AppCompatActivity {
             Intent intent = new Intent(ServerListActivity.this, CurrentRoomActivity.class);
             intent.putExtra("roomName", roomName);
             intent.putExtra("nickname", clientNickname);
+            intent.putExtra("selectedAvatar", clientProfileLogo);
             startActivity(intent);
         } catch (JSONException e) {
             e.printStackTrace();

@@ -26,12 +26,31 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return new MessageViewHolder(view);
     }
 
+    private int getProfileLogoResourceId(int profileLogoId) {
+        switch (profileLogoId) {
+            case 0:
+                return R.drawable.profile_logo_1;
+            case 1:
+                return R.drawable.profile_logo_2;
+            case 2:
+                return R.drawable.profile_logo_3;
+            case 3:
+                return R.drawable.profile_logo_4;
+            default:
+                return R.drawable.profile_logo_1;
+        }
+    }
+
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Message message = messageList.get(position);
 
         holder.usernameTextView.setText(message.getUsername());
         holder.messageTextView.setText(message.getMessage());
+
+        int profileLogoId = message.getClientProfileLogo();
+        int resourceId = getProfileLogoResourceId(profileLogoId);
+        holder.profileLogoImageView.setImageResource(resourceId);
 
         Log.d("MessageAdapter", "Binding message at position " + position + ": " + message.getUsername() + " - " + message.getMessage() + ", logo ID wiadomość otrzymana");
     }
@@ -44,12 +63,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView usernameTextView;
         TextView messageTextView;
-        ImageView avatarImageView;
+        ImageView profileLogoImageView;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
             usernameTextView = itemView.findViewById(R.id.usernameTextView);
             messageTextView = itemView.findViewById(R.id.messageTextView);
+            profileLogoImageView = itemView.findViewById(R.id.avatarImageView);
         }
     }
 }

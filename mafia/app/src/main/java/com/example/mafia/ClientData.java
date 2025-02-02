@@ -2,6 +2,7 @@ package com.example.mafia;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 public class ClientData {
 
