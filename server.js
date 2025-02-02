@@ -3,6 +3,7 @@ const http = require("http");
 const socketIO = require("socket.io");
 const cors = require("cors");
 const path = require("path");
+const { profile } = require("console");
 
 const app = express();
 const server = http.createServer(app);
@@ -70,6 +71,7 @@ io.on("connection", (socket) => {
       io.to(roomName).emit("message", {
         username: "System",
         message: `${playerName} joined the room.`,
+        profile_pic: selectedAvatar,
       });
     } else {
       socket.emit("error", { message: "Room does not exist" });
