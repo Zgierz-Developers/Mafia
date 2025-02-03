@@ -54,27 +54,32 @@ io.on("connection", (socket) => {
   });
 
   // Handle joining a room
-  socket.on("joinRoom", ({ roomName, playerName, selectedAvatar }) => {
-    if (rooms[roomName]) {
-      if (!rooms[roomName].players.includes(playerName)) {
-        rooms[roomName].players.push(playerName);
+  socket.on(
+    "joinRoom",
+    ({ roomName, playerName, selectedAvatar, selectedColor }) => {
+      if (rooms[roomName]) {
+        if (!rooms[roomName].players.includes(playerName)) {
+          rooms[roomName].players.push(playerName);
+        }
+        console.log(selectedAvatar); // Emit the selected avatar to the new player
+        socket.join(roomName);
+        socket.username = playerName; // Store the player's username in the socket object
+        socket.selectedAvatar = selectedAvatar; // Store the player's client profile logo in the socket object
+        socket.selectedColor = selectedColor;
+        console.log(
+          `${playerName} joined room: ${roomName} with client profile logo: ${selectedAvatar} and nick color: ${selectedColor}  `
+        );
+        io.to(roomName).emit("playerJoined", { playerName });
+        io.emit("roomList", rooms); // Update all clients with the updated room list
+        io.to(roomName).emit("message", {
+          username: "System",
+          message: `${playerName} joined the room.`,
+        });
+      } else {
+        socket.emit("error", { message: "Room does not exist" });
       }
-      socket.join(roomName);
-      socket.username = playerName; // Store the player's username in the socket object
-      socket.selectedAvatar = selectedAvatar; // Store the player's client profile logo in the socket object
-      console.log(
-        `${playerName} joined room: ${roomName} with client profile logo: ${selectedAvatar}`
-      );
-      io.to(roomName).emit("playerJoined", { playerName });
-      io.emit("roomList", rooms); // Update all clients with the updated room list
-      io.to(roomName).emit("message", {
-        username: "System",
-        message: `${playerName} joined the room.`,
-      });
-    } else {
-      socket.emit("error", { message: "Room does not exist" });
     }
-  });
+  );
 
   // Handle listing rooms
   socket.on("listRooms", () => {
