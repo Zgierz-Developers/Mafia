@@ -3,6 +3,7 @@ const http = require("http");
 const socketIO = require("socket.io");
 const cors = require("cors");
 const path = require("path");
+const { profile } = require("console");
 
 const app = express();
 const server = http.createServer(app);
@@ -78,6 +79,24 @@ io.on("connection", (socket) => {
       } else {
         socket.emit("error", { message: "Room does not exist" });
       }
+<<<<<<< HEAD
+=======
+      socket.join(roomName);
+      socket.username = playerName; // Store the player's username in the socket object
+      socket.selectedAvatar = selectedAvatar; // Store the player's client profile logo in the socket object
+      console.log(
+        `${playerName} joined room: ${roomName} with client profile logo: ${selectedAvatar}`
+      );
+      socket.to(roomName).emit("playerJoined", { playerName });
+      socket.emit("roomList", rooms); // Update all clients with the updated room list
+      socket.to(roomName).emit("message", {
+        username: "System",
+        message: `${playerName} joined the room.`,
+        selectedAvatar: selectedAvatar,
+      });
+    } else {
+      socket.emit("error", { message: "Room does not exist" });
+>>>>>>> ca8ad03e9d6265ad092a4178eaa7868bbe0237d6
     }
   );
 
@@ -88,11 +107,8 @@ io.on("connection", (socket) => {
 
   // Handle sending a message in a room
   socket.on("sendMessage", (data) => {
-    console.log(`Message from ${data.username}: ${data.message} data: ${data}`);
+    console.log(`Message from ${data.username}: ${data.message}, profile_pic: ${data.selectedAvatar}, data: ${data}`);
     socket.to(data.gameCode).emit("message", data);
-    socket
-      .to(data.clientProfileLogo)
-      .emit("clientProfileLogo", { clientProfileLogo: data.clientProfileLogo });
     console.log(`Message sent to room ${data.gameCode}`);
   });
 
