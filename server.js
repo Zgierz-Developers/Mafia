@@ -70,12 +70,13 @@ io.on("connection", (socket) => {
         console.log(
           `${playerName} joined room: ${roomName} with client profile logo: ${selectedAvatar} and nick color: ${selectedColor}`
         );
-        io.to(roomName).emit("playerJoined", { playerName });
-        io.emit("roomList", rooms); // Update all clients with the updated room list
-        io.to(roomName).emit("message", {
+        socket.to(roomName).emit("playerJoined", { playerName });
+        socket.emit("roomList", rooms); // Update all clients with the updated room list
+        socket.to(roomName).emit("message", {
           username: "System",
           message: `${playerName} joined the room.`,
           selectedAvatar: selectedAvatar,
+          selectedColor: selectedColor,
         });
       } else {
         socket.emit("error", { message: "Room does not exist" });
@@ -109,6 +110,8 @@ io.on("connection", (socket) => {
         io.to(roomName).emit("message", {
           username: "System",
           message: `${username} left the room.`,
+          selectedAvatar: socket.selectedAvatar,
+          selectedColor: socket.selectedColor,
         });
 
         if (room.hostSocketId === socket.id) {
