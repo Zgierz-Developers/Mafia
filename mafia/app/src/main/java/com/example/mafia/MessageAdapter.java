@@ -81,7 +81,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             case 15:
                 return R.color.white;
             default:
-                return R.color.pink;
+                return R.color.black;
         }
     }
 

@@ -24,7 +24,7 @@ public class SettingsActivity extends AppCompatActivity implements AvatarAdapter
     private ColorAdapter colorAdapter;
     private List<Integer> colorsDrawables;
     private int selectedAvatar = -1;
-    private int selectedColor = -1;
+    private int selectedNickColor = -1;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -90,7 +90,7 @@ public class SettingsActivity extends AppCompatActivity implements AvatarAdapter
             Toast.makeText(this, "Wybierz ikonę profilową", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (selectedColor == -1) {
+        if (selectedNickColor == -1) {
             Toast.makeText(this, "Wybierz kolor", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -99,7 +99,7 @@ public class SettingsActivity extends AppCompatActivity implements AvatarAdapter
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("nickname", newNickname);
         editor.putInt("selectedAvatar", selectedAvatar);
-        editor.putInt("selectedColor", selectedColor);
+        editor.putInt("selectedNickColor", selectedNickColor);
         editor.apply();
 
         Toast.makeText(this, "Ustawienia zapisane", Toast.LENGTH_SHORT).show();
@@ -110,14 +110,14 @@ public class SettingsActivity extends AppCompatActivity implements AvatarAdapter
         // Pobierz zapisany nick i ikonę z SharedPreferences
         String savedNickname = sharedPreferences.getString("nickname", "");
         selectedAvatar = sharedPreferences.getInt("selectedAvatar", -1);
-        selectedColor = sharedPreferences.getInt("selectedColor", -1);
+        selectedNickColor = sharedPreferences.getInt("selectedNickColor", -1);
 
         nicknameEditText.setText(savedNickname);
         if (selectedAvatar != -1) {
             avatarAdapter.setSelectedAvatar(selectedAvatar);
         }
-        if (selectedColor != -1) {
-            colorAdapter.setSelectedColor(selectedColor);
+        if (selectedNickColor != -1) {
+            colorAdapter.setSelectedColor(selectedNickColor);
         }
     }
 
@@ -128,12 +128,12 @@ public class SettingsActivity extends AppCompatActivity implements AvatarAdapter
 
     @Override
     public void onColorClick(int colorDrawable, int position) {
-        selectedColor = position;
+        selectedNickColor = position;
         colorAdapter.setSelectedColor(position);
     }
     public int getSelectedAvatar(){
         return selectedAvatar;
     }
-    public int getSelectedColor() { return selectedColor;
+    public int getSelectedColor() { return selectedNickColor;
     }
 }
