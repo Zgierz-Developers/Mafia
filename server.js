@@ -70,33 +70,16 @@ io.on("connection", (socket) => {
         console.log(
           `${playerName} joined room: ${roomName} with client profile logo: ${selectedAvatar} and nick color: ${selectedColor}  `
         );
-        io.to(roomName).emit("playerJoined", { playerName });
-        io.emit("roomList", rooms); // Update all clients with the updated room list
-        io.to(roomName).emit("message", {
+        socket.to(roomName).emit("playerJoined", { playerName });
+        socket.emit("roomList", rooms); // Update all clients with the updated room list
+        socket.to(roomName).emit("message", {
           username: "System",
           message: `${playerName} joined the room.`,
+          selectedAvatar: selectedAvatar,
         });
       } else {
         socket.emit("error", { message: "Room does not exist" });
       }
-<<<<<<< HEAD
-=======
-      socket.join(roomName);
-      socket.username = playerName; // Store the player's username in the socket object
-      socket.selectedAvatar = selectedAvatar; // Store the player's client profile logo in the socket object
-      console.log(
-        `${playerName} joined room: ${roomName} with client profile logo: ${selectedAvatar}`
-      );
-      socket.to(roomName).emit("playerJoined", { playerName });
-      socket.emit("roomList", rooms); // Update all clients with the updated room list
-      socket.to(roomName).emit("message", {
-        username: "System",
-        message: `${playerName} joined the room.`,
-        selectedAvatar: selectedAvatar,
-      });
-    } else {
-      socket.emit("error", { message: "Room does not exist" });
->>>>>>> ca8ad03e9d6265ad092a4178eaa7868bbe0237d6
     }
   );
 
