@@ -116,6 +116,8 @@ io.on("connection", (socket) => {
           selectedNickColor: socket.selectedNickColor || -1,
         });
 
+        console.log(`Attempting host transition:  Host socket - ${room.hostSocketId}, Leaver socket - ${socket.id}`);
+        
         if (room.hostSocketId === socket.id) {
           console.log(`Host of room ${roomName} left.`);
           if (room.players.length > 0) {
@@ -124,7 +126,7 @@ io.on("connection", (socket) => {
             room.hostSocketId = Object.keys(io.sockets.sockets).find(
               (id) => io.sockets.sockets[id].username === newHost
             );
-            console.log(`New host of room ${roomName} is ${newHost}`);
+            console.log(`New host of room ${roomName} is ${newHost} with socket id: ${room.hostSocketId}`);
             io.to(roomName).emit("newHost", { newHost });
             io.to(roomName).emit("message", {
               username: "System",
