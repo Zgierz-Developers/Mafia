@@ -75,7 +75,7 @@ io.on("connection", (socket) => {
         socket.to(roomName).emit("message", {
           username: "System",
           message: `${playerName} joined the room.`,
-          selectedAvatar: selectedAvatar,
+          selectedAvatar: selectedAvatar || -1,
           selectedNickColor: selectedNickColor || -1,
         });
       } else {
@@ -110,7 +110,7 @@ io.on("connection", (socket) => {
         io.to(roomName).emit("message", {
           username: "System",
           message: `${username} left the room.`,
-          selectedAvatar: socket.selectedAvatar,
+          selectedAvatar: socket.selectedAvatar || -1,
           selectedNickColor: socket.selectedNickColor || -1,
         });
 
@@ -127,6 +127,8 @@ io.on("connection", (socket) => {
             io.to(roomName).emit("message", {
               username: "System",
               message: `${newHost} is the new host.`,
+              electedAvatar: socket.selectedAvatar || -1,
+              selectedNickColor: socket.selectedNickColor || -1,
             });
           } else {
             console.log(`Deleting room ${roomName}`);
