@@ -105,6 +105,7 @@ public class ServerListActivity extends AppCompatActivity {
                     data.put("roomName", roomName);
                     data.put("ownerName", clientNickname);
                     data.put("selectedAvatar", clientProfileLogo);
+                    data.put("selectedColor", clientNickColor);
                     socket.emit("createRoom", data);
 
                     // Przejdź do CurrentRoomActivity z nazwą pokoju i nickiem
@@ -112,6 +113,7 @@ public class ServerListActivity extends AppCompatActivity {
                     intent.putExtra("roomName", roomName);
                     intent.putExtra("nickname", clientNickname);
                     intent.putExtra("selectedAvatar", clientProfileLogo);
+                    intent.putExtra("selectedNickColor", clientNickColor);
                     startActivity(intent);
                 } catch (JSONException e) {
                     e.printStackTrace();

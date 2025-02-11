@@ -113,6 +113,7 @@ public class SettingsActivity extends AppCompatActivity implements AvatarAdapter
         selectedNickColor = sharedPreferences.getInt("selectedNickColor", -1);
 
         nicknameEditText.setText(savedNickname);
+
         if (selectedAvatar != -1) {
             avatarAdapter.setSelectedAvatar(selectedAvatar);
         }

@@ -128,7 +128,7 @@ public class CurrentRoomActivity extends AppCompatActivity {
                     String message = data.getString("message");
                     Integer clientProfileLogo = data.getInt("selectedAvatar");
                     Integer clientNickColor = data.getInt("selectedNickColor");
-                    Log.d("CurrentRoomActivity", "Received message: " + message + " from " + username + " with logo ID: " + clientProfileLogo);
+                    Log.d("CurrentRoomActivity", "Received message: " + message + " from " + username + " with logo ID: " + clientProfileLogo + " kurwa kolor " + clientNickColor);
                     messageList.add(new Message(username, message, clientProfileLogo, clientNickColor));
                     messageAdapter.notifyItemInserted(messageList.size() - 1);
                     messagesRecyclerView.scrollToPosition(messageList.size() - 1);
