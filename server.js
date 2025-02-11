@@ -111,7 +111,7 @@ io.on("connection", (socket) => {
           username: "System",
           message: `${username} left the room.`,
           selectedAvatar: socket.selectedAvatar,
-          selectedNickColor: socket.selectedNickColor,
+          selectedNickColor: socket.selectedNickColor || -1,
         });
 
         if (room.hostSocketId === socket.id) {
