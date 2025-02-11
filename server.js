@@ -50,6 +50,8 @@ io.on("connection", (socket) => {
       io.to(roomName).emit("message", {
         username: "System",
         message: `${ownerName} created the room.`,
+        selectedAvatar: socket.selectedAvatar || -1,
+        selectedNickColor: socket.selectedNickColor || -1,
       });
     }
   });
