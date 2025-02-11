@@ -76,7 +76,7 @@ io.on("connection", (socket) => {
           username: "System",
           message: `${playerName} joined the room.`,
           selectedAvatar: selectedAvatar,
-          selectedNickColor: selectedNickColor,
+          selectedNickColor: selectedNickColor || -1,
         });
       } else {
         socket.emit("error", { message: "Room does not exist" });
