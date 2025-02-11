@@ -57,7 +57,7 @@ io.on("connection", (socket) => {
   // Handle joining a room
   socket.on(
     "joinRoom",
-    ({ roomName, playerName, selectedAvatar, selectedColor }) => {
+    ({ roomName, playerName, selectedAvatar, selectedNickColor }) => {
       if (rooms[roomName]) {
         if (!rooms[roomName].players.includes(playerName)) {
           rooms[roomName].players.push(playerName);
@@ -66,9 +66,9 @@ io.on("connection", (socket) => {
         socket.join(roomName);
         socket.username = playerName; // Store the player's username in the socket object
         socket.selectedAvatar = selectedAvatar; // Store the player's client profile logo in the socket object
-        socket.selectedColor = selectedColor;
+        socket.selectedNickColor = selectedNickColor;
         console.log(
-          `${playerName} joined room: ${roomName} with client profile logo: ${selectedAvatar} and nick color: ${selectedColor}`
+          `${playerName} joined room: ${roomName} with client profile logo: ${selectedAvatar} and nick color: ${selectedNickColor}`
         );
         socket.to(roomName).emit("playerJoined", { playerName });
         socket.emit("roomList", rooms); // Update all clients with the updated room list
@@ -76,7 +76,7 @@ io.on("connection", (socket) => {
           username: "System",
           message: `${playerName} joined the room.`,
           selectedAvatar: selectedAvatar,
-          selectedColor: selectedColor,
+          selectedNickColor: selectedNickColor,
         });
       } else {
         socket.emit("error", { message: "Room does not exist" });
@@ -111,7 +111,7 @@ io.on("connection", (socket) => {
           username: "System",
           message: `${username} left the room.`,
           selectedAvatar: socket.selectedAvatar,
-          selectedColor: socket.selectedColor,
+          selectedNickColor: socket.selectedNickColor,
         });
 
         if (room.hostSocketId === socket.id) {
