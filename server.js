@@ -110,7 +110,7 @@ io.on("connection", (socket) => {
     if (rooms[roomName]) {
       const room = rooms[roomName];
       const playerIndex = room.players.indexOf(username);
-      const playerSocketIndex = room.players.indexOf(socket.id);
+      const playerSocketIndex = room.playersSockets.indexOf(socket.id);
 
       if (playerIndex !== -1) {
         room.players.splice(playerIndex, 1);
