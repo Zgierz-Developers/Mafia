@@ -4,11 +4,13 @@ public class Message {
     private String username;
     private String message;
     private Integer clientProfileLogo;
+    private Integer clientNickColor;
 
-    public Message(String username, String message, Integer clientProfileLogo) {
+    public Message(String username, String message, Integer clientProfileLogo, Integer clientNickColor) {
         this.username = username;
         this.message = message;
         this.clientProfileLogo = clientProfileLogo;
+        this.clientNickColor = clientNickColor;
     }
 
     public String getUsername() {
@@ -20,6 +22,8 @@ public class Message {
     }
 
     public Integer getClientProfileLogo() {return clientProfileLogo; }
+
+    public Integer getClientNickColor() {return clientNickColor; }
 
     @Override
     public String toString() {

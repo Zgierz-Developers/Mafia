@@ -23,4 +23,9 @@ public class ClientData {
         SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getInt("selectedAvatar", -1);
     }
+
+    public Integer getSelectedNickColor() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt("selectedColor", -1);
+    }
 }
