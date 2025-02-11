@@ -41,6 +41,7 @@ io.on("connection", (socket) => {
       rooms[roomName] = {
         owner: ownerName,
         players: [ownerName],
+        playersSockets: [socket.id],
         hostSocketId: socket.id,
       };
       socket.join(roomName);
@@ -66,6 +67,10 @@ io.on("connection", (socket) => {
         }
         console.log(selectedAvatar); // Emit the selected avatar to the new player
         socket.join(roomName);
+
+        console.log(`Adding players socket to room: ${socket.id}`);
+        rooms[roomName].playersSockets = socket.id;
+        
         socket.username = playerName; // Store the player's username in the socket object
         socket.selectedAvatar = selectedAvatar; // Store the player's client profile logo in the socket object
         socket.selectedNickColor = selectedNickColor;
@@ -105,9 +110,11 @@ io.on("connection", (socket) => {
     if (rooms[roomName]) {
       const room = rooms[roomName];
       const playerIndex = room.players.indexOf(username);
+      const playerSocketIndex = room.players.indexOf(socket.id);
 
       if (playerIndex !== -1) {
         room.players.splice(playerIndex, 1);
+        room.playersSocket.splice(playerSocketIndex, 1);
         console.log(`${username} left room: ${roomName}`);
         io.to(roomName).emit("message", {
           username: "System",
@@ -122,10 +129,9 @@ io.on("connection", (socket) => {
           console.log(`Host of room ${roomName} left.`);
           if (room.players.length > 0) {
             const newHost = room.players[0];
+            const newHostSocket = room.playersSockets[0];
             room.owner = newHost;
-            room.hostSocketId = Object.keys(io.sockets.sockets).find(
-              (id) => io.sockets.sockets[id].username === newHost
-            );
+            room.hostSocketId = newHostSocket;
             console.log(`New host of room ${roomName} is ${newHost} with socket id: ${room.hostSocketId}`);
             io.to(roomName).emit("newHost", { newHost });
             io.to(roomName).emit("message", {
