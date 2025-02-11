@@ -34,6 +34,7 @@ public class ServerListActivity extends AppCompatActivity {
     private Socket socket;
     private String clientNickname;
     private Integer clientProfileLogo;
+    private Integer clientNickColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class ServerListActivity extends AppCompatActivity {
         ClientData clientData = new ClientData(this);
         clientNickname = clientData.getClientNickname();
         clientProfileLogo = clientData.getSelectedAvatar();
+        clientNickColor = clientData.getSelectedNickColor();
         setContentView(R.layout.activity_server_list);
 
         serverListView = findViewById(R.id.serverListView);
@@ -103,6 +105,7 @@ public class ServerListActivity extends AppCompatActivity {
                     data.put("roomName", roomName);
                     data.put("ownerName", clientNickname);
                     data.put("selectedAvatar", clientProfileLogo);
+                    data.put("selectedColor", clientNickColor);
                     socket.emit("createRoom", data);
 
                     // Przejdź do CurrentRoomActivity z nazwą pokoju i nickiem
@@ -110,6 +113,7 @@ public class ServerListActivity extends AppCompatActivity {
                     intent.putExtra("roomName", roomName);
                     intent.putExtra("nickname", clientNickname);
                     intent.putExtra("selectedAvatar", clientProfileLogo);
+                    intent.putExtra("selectedNickColor", clientNickColor);
                     startActivity(intent);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -125,17 +129,19 @@ public class ServerListActivity extends AppCompatActivity {
     }
 
     private void joinRoom(String roomName) {
-        Log.d("Selected Avatar", String.valueOf(clientProfileLogo));
+        Log.d("Selected Color", String.valueOf(clientNickColor));
         try {
             JSONObject data = new JSONObject();
             data.put("roomName", roomName);
             data.put("playerName", clientNickname);
             data.put("selectedAvatar", clientProfileLogo);
+            data.put("selectedColor", clientNickColor);
             socket.emit("joinRoom", data);
             Intent intent = new Intent(ServerListActivity.this, CurrentRoomActivity.class);
             intent.putExtra("roomName", roomName);
             intent.putExtra("nickname", clientNickname);
             intent.putExtra("selectedAvatar", clientProfileLogo);
+            intent.putExtra("selectedNickColor", clientNickColor);
             startActivity(intent);
         } catch (JSONException e) {
             e.printStackTrace();

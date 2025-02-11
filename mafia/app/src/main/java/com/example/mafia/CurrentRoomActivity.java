@@ -32,6 +32,8 @@ public class CurrentRoomActivity extends AppCompatActivity {
     private String nickname;
     private Socket socket;
     private Integer clientProfileLogo;
+    private Integer clientNickColor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +52,7 @@ public class CurrentRoomActivity extends AppCompatActivity {
         roomDetailsTextView.setText("Room: " + roomName);
 
         clientProfileLogo = getIntent().getIntExtra("selectedAvatar", -1);
+        clientNickColor = getIntent().getIntExtra("selectedNickColor", -1);
 
         messageList = new ArrayList<>();
         messageAdapter = new MessageAdapter(messageList);
@@ -97,13 +100,15 @@ public class CurrentRoomActivity extends AppCompatActivity {
 
     private void sendMessage(String message) {
         try {
+            Log.d("MessageAdapter", "message.getClientNickColor(): " + clientNickColor);
             JSONObject data = new JSONObject();
             data.put("username", nickname);
             data.put("message", message);
             data.put("gameCode", roomName);
             data.put("selectedAvatar", clientProfileLogo);
+            data.put("selectedNickColor", clientNickColor);
             socket.emit("sendMessage", data);
-            messageList.add(new Message(nickname, message, clientProfileLogo));
+            messageList.add(new Message(nickname, message, clientProfileLogo, clientNickColor));
             messageAdapter.notifyItemInserted(messageList.size() - 1);
             messagesRecyclerView.scrollToPosition(messageList.size() - 1);
             messageEditText.setText("");
@@ -122,8 +127,9 @@ public class CurrentRoomActivity extends AppCompatActivity {
                     String username = data.getString("username");
                     String message = data.getString("message");
                     Integer clientProfileLogo = data.getInt("selectedAvatar");
-                    Log.d("CurrentRoomActivity", "Received message: " + message + " from " + username + " with logo ID: " + clientProfileLogo);
-                    messageList.add(new Message(username, message, clientProfileLogo));
+                    Integer clientNickColor = data.getInt("selectedNickColor");
+                    Log.d("CurrentRoomActivity", "Received message: " + message + " from " + username + " with logo ID: " + clientProfileLogo + " kurwa kolor " + clientNickColor);
+                    messageList.add(new Message(username, message, clientProfileLogo, clientNickColor));
                     messageAdapter.notifyItemInserted(messageList.size() - 1);
                     messagesRecyclerView.scrollToPosition(messageList.size() - 1);
                 } catch (JSONException e) {
