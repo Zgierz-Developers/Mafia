@@ -114,7 +114,7 @@ io.on("connection", (socket) => {
 
       if (playerIndex !== -1) {
         room.players.splice(playerIndex, 1);
-        room.playersSocket.splice(playerSocketIndex, 1);
+        room.playersSockets.splice(playerSocketIndex, 1);
         console.log(`${username} left room: ${roomName}`);
         io.to(roomName).emit("message", {
           username: "System",
