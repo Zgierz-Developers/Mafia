@@ -69,7 +69,7 @@ io.on("connection", (socket) => {
         socket.join(roomName);
 
         console.log(`Adding players socket to room: ${socket.id}`);
-        rooms[roomName].playersSockets = socket.id;
+        rooms[roomName].playersSockets.push(socket.id);
         
         socket.username = playerName; // Store the player's username in the socket object
         socket.selectedAvatar = selectedAvatar; // Store the player's client profile logo in the socket object
