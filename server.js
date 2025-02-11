@@ -68,35 +68,18 @@ io.on("connection", (socket) => {
         socket.selectedAvatar = selectedAvatar; // Store the player's client profile logo in the socket object
         socket.selectedColor = selectedColor;
         console.log(
-          `${playerName} joined room: ${roomName} with client profile logo: ${selectedAvatar} and nick color: ${selectedColor}  `
+          `${playerName} joined room: ${roomName} with client profile logo: ${selectedAvatar} and nick color: ${selectedColor}`
         );
         io.to(roomName).emit("playerJoined", { playerName });
         io.emit("roomList", rooms); // Update all clients with the updated room list
         io.to(roomName).emit("message", {
           username: "System",
           message: `${playerName} joined the room.`,
+          selectedAvatar: selectedAvatar,
         });
       } else {
         socket.emit("error", { message: "Room does not exist" });
       }
-<<<<<<< HEAD
-=======
-      socket.join(roomName);
-      socket.username = playerName; // Store the player's username in the socket object
-      socket.selectedAvatar = selectedAvatar; // Store the player's client profile logo in the socket object
-      console.log(
-        `${playerName} joined room: ${roomName} with client profile logo: ${selectedAvatar}`
-      );
-      socket.to(roomName).emit("playerJoined", { playerName });
-      socket.emit("roomList", rooms); // Update all clients with the updated room list
-      socket.to(roomName).emit("message", {
-        username: "System",
-        message: `${playerName} joined the room.`,
-        selectedAvatar: selectedAvatar,
-      });
-    } else {
-      socket.emit("error", { message: "Room does not exist" });
->>>>>>> ca8ad03e9d6265ad092a4178eaa7868bbe0237d6
     }
   );
 
@@ -107,7 +90,9 @@ io.on("connection", (socket) => {
 
   // Handle sending a message in a room
   socket.on("sendMessage", (data) => {
-    console.log(`Message from ${data.username}: ${data.message}, profile_pic: ${data.selectedAvatar}, data: ${data}`);
+    console.log(
+      `Message from ${data.username}: ${data.message}, profile_pic: ${data.selectedAvatar}, data: ${data}`
+    );
     socket.to(data.gameCode).emit("message", data);
     console.log(`Message sent to room ${data.gameCode}`);
   });
