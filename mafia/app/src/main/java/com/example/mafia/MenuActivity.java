@@ -3,6 +3,7 @@ package com.example.mafia;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -34,15 +35,20 @@ public class MenuActivity extends AppCompatActivity {
         serverListButton = findViewById(R.id.serverListButton);
         settingsButton = findViewById(R.id.settingsButton);
 
-        serverListButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MenuActivity.this, ServerListActivity.class);
-            startActivity(intent);
+        serverListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MenuActivity.this, ServerListActivity.class);
+                startActivity(intent);
+            }
         });
 
-        settingsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MenuActivity.this, SettingsActivity.class);
-            startActivity(intent);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MenuActivity.this, SettingsActivity.class);
+                startActivity(intent);
+            }
         });
-
     }
 }
